@@ -1,4 +1,4 @@
-What problem are you investigating?
+## What problem are you investigating?
 
 Describe a specific difficulty and the conditions under which it occurs. Walk through one concrete example, including the normal behavior and what goes wrong. Define the boundaries of the problem.
 
