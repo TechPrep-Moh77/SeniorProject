@@ -70,13 +70,15 @@ FAIROS also advocates for creating new, potentially better models that drive bet
 
 - Interoperable: Able to work seamlessly across different systems and software.
 
-- Reusable: Well-documented so others can safely build on or verify the findings1.
+- Reusable: Well-documented so others can safely build on or verify the findings.
 https://www.gofair.foundation/fair-principles
+
+As to how this relates to the project, it advocates for better documentation of data. 1) Persistent and unique identifier for a dataset and its variants, findable 2)metadata should be availiable even if the data isn't, accesible 3) wwhen data is shared, it should be easy for other researchers to use especially when updates occur, interperable, 4) reusable, being coherent enough for other researchers to use.
                     **Other evidence of it being a problem**
 
 <ins>80/20 rule in data science</ins>
 
-According to a Pragmatic institute article, titled “Overcoming the 80/20 Rule in Data Science,” it states “Data practitioners spend 80% of their valuable time finding, cleaning, and organizing the data. This leaves only 20% of their time to actually perform analysis on it.” This is a huge concern considering the size of complexity of data only increasing over time. Now, if there was a pipeline setup involving the old dataset, and a researcher intends to use an updated version, they would have to spend 80% of their time, if not more, manually altering the pipeline to account for the schema changes, data samples, units etc. This is a huge concern and time waster with the growing use of AI. And in addition to this, since time spent looking for data is included in the 80%, it may become even more difficult unless there are platforms that implement something akin to the FAIR guiding principles.
+According to a Pragmatic institute article, titled “Overcoming the 80/20 Rule in Data Science,” it states “Data practitioners spend 80% of their valuable time finding, cleaning, and organizing the data. This leaves only 20% of their time to actually perform analysis on it.” This is a huge concern considering the size of complexity of data only increasing over time. Now, if there was a pipeline setup involving the old dataset, and a researcher intends to use an updated version, they would have to spend 80% of their time, if not more, manually altering the pipeline to account for the schema changes, data samples, units etc. This is a huge concern and time waster with the growing use of AI. And in addition to this, since time spent looking for data is included in the 80%, it may become even more difficult unless there are platforms that implement something akin to the FAIR guiding principles. In short, since data always updates, it becomes a problem for data practitioners if the changes aren't well documented. Both for machine and humans alike 
 
 https://www.pragmaticinstitute.com/resources/articles/data/overcoming-the-80-20-rule-in-data-science /
 
@@ -86,7 +88,7 @@ In this paper, by Helmholtz Metadata Collaboration, it states the importance of 
 
 [Guidance on Versioning of Digital Assets](https://elib.dlr.de/193967/1/2022-12_HMC-Paper_3_Versioning_v1-1.pdf)
 
-(my definition of Downstream researchers are those who work on a replica on their own local machine from a given source).
+(my definition of downstream researchers are those who work on a replica on their own local machine from a given source).
 
 <ins>Versioning Data Is About More than Revisions: A Conceptual Framework and Proposed Principles</ins>
 
@@ -97,11 +99,14 @@ This paper states that datasets are often updated or altered for things such as 
 First thing to point out, is the mentioning of datasets becoming too large and having to download a subset. This is a big problem because users now rely on dynamic data instead of having a static copy on their local machine. If users rely on dynamic data, then changes to the data become much more unnoticeable. We need more specific guidelines to see what changes were made to understand how it will affect our research. And version control was mentioned in the problem statement.
 
 
-Another jarring thing to note is these datasets are being used in big decision making process. It is essential to verify the data by trying to reproduce it. If the dataset was changed, and not knowing the specific changes, the data becomes unreliable. Which delays progress such as the covid 19 treatment example mentioned in the passage. This example slightly differs from my project however, since it focuses on downloaded copies instead of dynamically pulling data
+Another jarring thing to note is these datasets are being used in big decision making process. It is essential to verify the data by trying to reproduce it. If the dataset was changed, and not knowing the specific changes, the data becomes unreliable. Which delays progress such as the covid 19 treatment example mentioned in the passage. This example slightly differs from my project however, since it focuses on downloaded copies instead of dynamically pulling data. past versions of datasets should be preserved for reproducibility, and if not, it should properly document the changes to ensure reproducibility to verify the credibility of the dataset.
+
+Overall, mandating a structured data documentation leads to more reliability and usage of the data itself.
+
 
 [1246-1-9224-1-10-20210323.pdf](https://storage.googleapis.com/jnl-up-j-dsj-files/journals/1/articles/1246/submission/proof/1246-1-9224-1-10-20210323.pdf)
 
-past versions of datasets should be preserved for reproducibility, and if not, it should properly document the changes to ensure reproducibility to verify the credibility of the dataset.
+
 
 <ins>Shedding Light on the Dark Data in the Long Tail of Science</ins>
 
@@ -150,6 +155,8 @@ What versioning information should be included in data citation?
 How much change is enough for it to be considered a new release instead of a revised dataset?
 
 A research step I can do to go about this is when protyping, I can include two very small data sets, each with atleast 2 versions to them. I will have people test them to see which documentation format is more preferable. 
+
+I am also curious about how much FAIR guiding principles I should incoprporate, but not sure if that is beyond the s cope of my project. 
 ## Your Individual Scope
 
 *Define what you will investigate, what you will exclude, and the comparison you will make. Identify the tools, data, or simulation you expect to use. Briefly describe a possible solution direction without treating it as a proven answer. Explain why the work is manageable for one student.*
@@ -159,6 +166,8 @@ I will investigate which version and description rules let a researcher correctl
 I will exclude being able to remotely pull data dynamically, and only include downloaded replicas. 
 
 Possible solution is requiring a structured documentation of changes between versions. A diff file would only help for machine-actionable goals, but also mandating semantic versioning may hopefully lead to better understanding of the changes by the reader. A diff file, semantic versioning notes along with way to tell how significant the changes are(possibily major.minor.patch.syntax format) between each versions will hopefully lead to better downstream research. 
+
+I will also try to incorporate FAIR methods in the process. 
 
 ## IGNORE BELOW, PERSONAL NOTES
 
