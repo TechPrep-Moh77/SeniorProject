@@ -3,12 +3,30 @@
 *Describe a specific difficulty and the conditions under which it occurs. Walk through one concrete example, including the normal behavior and what goes wrong. Define the boundaries of the problem.*
 
 
-Problem Statement (attempt 4) - It is not unusual for a researcher to rely on or build on top of an existing dataset published by other organizations or independent researchers. But it’s important to note that scientific research can go on for long periods of time. And during this time frame, the dataset these researchers rely on may change without the researcher knowing. Changes like updating the old dataset with corrected values, renaming field names, changing units and/or adding more samples to the dataset. 
+~~Problem Statement (attempt 4) - It is not unusual for a researcher to rely on or build on top of an existing dataset published by other organizations or independent researchers. But it’s important to note that scientific research can go on for long periods of time. And during this time frame, the dataset these researchers rely on may change without the researcher knowing. Changes like updating the old dataset with corrected values, renaming field names, changing units and/or adding more samples to the dataset. 
 
 The problem that arises is researcher may not be aware that they are using an outdated dataset, or if they do realize and download the newest version of the dataset, the meaning and formatting isn’t preserved, causing the researcher to spend time reinterpreting this new dataset instead of a seamless transition. 
 
 
-For example, researcher A conducts a study on how to perform better in school. Researcher A  relies on an old dataset from researcher B that surveys the average study time for different grade levels. Previously, the dataset from researcher B uses “FR” that stands for freshman in one of the fields, and uses student data from 2019. Researcher B updates the datasets with more up-to-date samples(i.e students from 2019 to students from 2026) and changes FR to just F. Researcher A may not know about these helpful updates in samples and continues to use outdated data. And if researcher A is aware about an update to the change, they may not understand the meaning behind the field names any longer. In either case, researcher A is now working with data that may compromise their ongoing research. How can we develop a system that not only notifies users of any changes to their replica of data but also preserves the meaning of the data in the newest version to allow for seamless usage?
+For example, researcher A conducts a study on how to perform better in school. Researcher A  relies on an old dataset from researcher B that surveys the average study time for different grade levels. Previously, the dataset from researcher B uses “FR” that stands for freshman in one of the fields, and uses student data from 2019. Researcher B updates the datasets with more up-to-date samples(i.e students from 2019 to students from 2026) and changes FR to just F. Researcher A may not know about these helpful updates in samples and continues to use outdated data. And if researcher A is aware about an update to the change, they may not understand the meaning behind the field names any longer. In either case, researcher A is now working with data that may compromise their ongoing research. How can we develop a system that not only notifies users of any changes to their replica of data but also preserves the meaning of the data in the newest version to allow for seamless usage?~~
+
+**improved problem statement** 
+It is not unusual for a researcher to rely on  or build on top of preexisting data. But it’s important to note that scientific research can take a long time to complete. During this time, the datasets these researchers rely on may have changed. The problem is, oftentimes there is no community-agreed upon, practical way to document these changes as best as possible. The way to preserve the meaning often fluctuates between data providers. Not documenting these changes to the dataset can compromise the work of the researcher in different ways. 
+
+
+For example, researcher A does a study on academic study habits (i.e studying time, environment, grade level etc. ) and relies on researcher’s B dataset that documented 2019 study times across different grade levels. If researcher B updates his/her dataset with things like correcting values, changing field names from FR(freshman) to just F,  and using samples from 2026 instead of 2019. Several problems can arise from this: The first problem is that researcher A may not know about the new and improved dataset. When researcher A is done with his/her study, they may be seen as unreliable for using an outdated data set. The second potential problem is that if researcher A was aware of the updated dataset, they may not know what these changes, specifically to the structure and schema, means. Since there was no mandated changelog to document what F refers to, the researcher would spend time reinterpreting the new dataset.  Both of these problems are all subsets to the main problem of not having a mandatory proper, consistent documentation method to help preserve the integrity and meaning of the dataset. 
+
+*can skip this example if confusing*
+Another example that applies to the real world was the covid scandal. Researchers (including world health organization) accepted a multi-national study  about covid treatment and how a certain drug was ineffective. This caused the testing trials on the drug to halt, however it was found out that there was no documented dataset that lead to this conclusion. The problem here is since there was not standardized system of documentation and mandation of documentation, the assumedly fake research was able to get away seeming legit. In general, not having a snapshot of how a dataset led to the researchers conclusions causes the conclusions to be illegitimate if researchers aren't able to use that dataset to come to the same conclusions (failure of reproductivity). 
+To recap, the difficulty is not having a proper way to preserve meaning of changed data and downstream researchers not being alerted about the changes. The conditions to which this occurs are primarily in areas of research, open-science activities, essentially anything evolving sharing of data amongst scholars. 
+
+
+The hopeful aim of this project is to develop a platform where there is a mandatory, correct way where data providers can upload data, properly document the changes to the updated data, and alert downstream researchers who downloaded a copy of that data. The changes should be human-readable, meaning semantic changes should be documented for the user (example with FR to F both standing for freshman) and machine-actionable meaning the data should be easily accessible by machines and they should be able to differentiate between the versions. 
+
+
+The boundaries of this problem (which may be subject to change) may be prioritizing preserving meaning first across versions, alerting downstream researchers when a change to their replica has occurred may not be considered as much or treated as a secondary, and I believe I may try to keep the changes as minimal as possible for now (i.e added/deleted samples and schema change). 
+This is a distributed related problem because downstream researchers have their own local copy on their own respective nodes. The platform should keep track of these nodes, whenever the original dataset gets updated, it should notify every node whenever it the user checks their dashboard
+
 
 
 
@@ -99,18 +117,19 @@ Assumptions: Many platforms allow publishers to add version notes or field descr
 
 ## What solutions already exist?
 
-Compare at least two existing approaches. Explain how they work, what they handle well, and their
+*Compare at least two existing approaches. Explain how they work, what they handle well, and their limitations under your chosen conditions. Use relevant documentation to support the comparison.*
 
-limitations under your chosen conditions. Use relevant documentation to support the comparison.
-
-OpenRefine is an open-source tool for cleaning and transforming data. Primarily useful for consistently standardized updated datasets. It records every transformation in an undo/redo history, and that history
+<ins>Zenodo:</ins> Strengths is, zenodo provides DOI for all published uploads. Uses DOI versioning which allows: “edit/update the record’s files after they have been published. cite a specific version of a record. cite all of versions of a record.” According to their help versioning page. It also provides tow DOI, one representing all versions of the data, and another referring to a specific version of the data
 
 
-can be extracted as JSON and reapplied to another project. The limitation is that this is more helpful for researchers rather than people who publish datasets. For example, a researcher can format an existing dataset tailored to their benefits. Some useful tools provided: Tools such as edit rows where sorting is based on value of one column; Split and join column where the user may join or separate column based on a character or string; Fingerprinting which is most helpful and considered fast, where it goes through all rows, removes punctuations, all whitespace, uppercase, and compares them all to see if they are the same. If they are, combines it to one row which acts as a “key” value.
+The limitations are, it doesn’t alert people of the version changes/updates. Users will have to manually check to see if there’s been updated data. Another weakness is the idea of “semantic versioning.” It’s entirely up to the data provider whether or not they want to include human readable notes that document what the changes are and why the changes are made. 
 
-GitHub records the full history of a dataset’s files, including who changed what and when, and let
 
-publishers mark versions with tags and releases. Its limitations is that it doesnt, to my knowledge, notify a downstream researcher of the updated versions. Must be checked manually
+<ins>Github(2):</ins> Strengths are, records full history of changes to the data, including who change what and when. Commit message is also attached to each change for semantic versioning. Can see a “snapshot” of each version. Very machine-actionable
+Limitations are, doesn’t notify downstream researchers of updated versions, must be manually checked. Another limitation is line by line comparison of changes in diff file , and commit messages can be wishy washy in quality (i intend to solve by making it community based. Can like or dislike based on how good documentation is. )
+
+
+<ins> OpenRefine </ins> is an open-source tool for cleaning and transforming data. Primarily useful for consistently standardized updated datasets.  It records every transformation in an undo/redo history, and that history can be extracted as JSON and reapplied to another project. The limitation is that this is more helpful for researchers rather than people who publish datasets. For example, a researcher can format an existing dataset tailored to their benefits. Some useful tools provided: Tools such as edit rows where sorting is based on value of one column; Split and join column where the user may join or separate column based on a character or string; Fingerprinting which is most helpful and considered fast, where it goes through all rows, removes punctuations, all whitespace, uppercase, and compares them all to see if they are the same. If they are, combines it to one row which acts as a “key” value.
 
 ## What is the most important thing you still do not know?
 
