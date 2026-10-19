@@ -137,13 +137,28 @@ Limitations are, doesn’t notify downstream researchers of updated versions, mu
 
 that could resolve it. State what data, scenario, or measurement you would use and how the result would influence your design.
 
-What I still don’t know is how much documentation is needed, what’s the best way to preserve meaning for different categories (dates, units, semantics values etc.)
+Some other things I still don’t know: 
 
+what’s the best way to preserve meaning for different categories like dates, units, semantics values  and so on. Should dates all follow a YYYY-MM-DD format for example
+
+What constitutes as enough to be considered a new version? For example, if you change the metadata should it be considered a new version?
+
+What needs to be included in versioning history? 
+
+How should a version be named or numbered? 
+What versioning information should be included in data citation?
+How much change is enough for it to be considered a new release instead of a revised dataset?
+
+A research step I can do to go about this is when protyping, I can include two very small data sets, each with atleast 2 versions to them. I will have people test them to see which documentation format is more preferable. 
 ## Your Individual Scope
 
 *Define what you will investigate, what you will exclude, and the comparison you will make. Identify the tools, data, or simulation you expect to use. Briefly describe a possible solution direction without treating it as a proven answer. Explain why the work is manageable for one student.*
 
-I think for my scope, I will focus less on cleaning the data and following FAIR guidelines, and more on trying to find a way to better preserve meaning across different versions. If that seems a bit hard to focus on I may consider a balance between the two.
+I will investigate which version and description rules let a researcher correctly interpret both the old and new versions of a dataset after its publisher changes it.I will also check whether a researcher holding a downloaded copy can tell that their copy is out of date by comparing version tags.
+
+I will exclude being able to remotely pull data dynamically, and only include downloaded replicas. 
+
+Possible solution is requiring a structured documentation of changes between versions. A diff file would only help for machine-actionable goals, but also mandating semantic versioning may hopefully lead to better understanding of the changes by the reader. A diff file, semantic versioning notes along with way to tell how significant the changes are(possibily major.minor.patch.syntax format) between each versions will hopefully lead to better downstream research. 
 
 ## IGNORE BELOW, PERSONAL NOTES
 
