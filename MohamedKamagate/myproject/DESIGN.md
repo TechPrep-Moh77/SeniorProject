@@ -182,7 +182,151 @@ approaches under the same requirements, including a simple baseline. -->
 **Consequences:** Replace.  
 **Status and revisit condition:** Replace.
 
+### Decision test
+Architecture design 
+**Context and requirement:** The prototype must take in user queries related to flood related disasters in NY(F1) and the system must respond in plain language(F2) while simultaneously providing the source provenance to back up its claim (F2, C1). The system relies on a 10 static document corpus for the collection of data. An important aspect of the system is that it prevents hallucinations, false data, and overall unverifiable claims (F3). 
+**Options:**
 
+* Keyword + metadata (serves as baseline)
+* Semantic RAG (single pipeline)
+* Four tier agentic architecture
+**Decision and reason:** Out of the 3 options, I selected the RAG system.
+**Consequences:** Benefits, costs, and limitations.  
+**Status and revisit condition:** Proposed or accepted; what might change it?
+
+
+## REDO REDO FOR 3
+
+## 3 Alternatives and selected solution
+
+*Required behavior* : 
+
+| ID | Required behavior and conditions | Acceptance check | Design and test reference |
+|---|---|---|---|
+| F1 | When a general public user submits a plain-language query about flood related disasters in NY such as Hurricane Ida, the system must retrieve relevant passages from the static 10-document collection and display each passage's document title, source URL, and collection date. | Run at least 5 of the test queries and manually check if each response has a source provenance| Add as design develops |
+|F2 | A general public user submits a query in plain language, and receives a response in plain language | Submit a query, and manual check the response to see if there is no heavy jargon from the generated response | Add as design develops |
+| F3 | When a user submits a query that cannot be answered form the 10-document collection, the system must state its limitations and must not generate unverifiable claims | Submit a query the archive cannot answer (i.e. a flood event on a date that never occured). Pass if the response states the limitation, does not invent data, and suggests an alternative source. |
+| C1 | No claim/response is returned without a source. | Run the prepared queries. Should be able to go to the provided source and verify it manually. | Add as design develops |
+| Q1 | Response time of atleast 90% of queries that involves different domains should not surpass 5 second threshold. Will test with 10 or so queries. | Input a multi domain query and measure the speed of the output. | Proposed. Not yet measured, will update to measured when results from test has been received |
+<!-- Draft in Assignment 2; complete in Assignment 3. Compare at least two
+approaches under the same requirements, including a simple baseline. -->
+
+| Required behavior |Keyword Search +Metadata (Simple baseline) | Semantic Retrieval using RAG and LLM | Four tier agentic architecture | 
+|---|---|---|---|
+| F1 | Strongest in terms of exact provenance. Queries match keywords/tags and return matching document excerpts and links directly without generating a synthesized answer conducted by an LLM. Each text/passage should have their URL, collection date, and title as key values[^5] (small experiment) | Strongest in terms of grounded synthesize answers in plain language. The retrieval component searches the static document chunks and returns relevant passages along with their attached metadata (title, url, and collection date, overall source provenance). The prompt now gets augmented with this new information for the LLM.  LLM will generate a response while being enforced to return the passage it used url, title, collection date.(documentation/judgement)  | Routes queries across agent tiers and live/external sources to retrieve records and attach provenance (documentation and judgement) |
+|F2 |Weakest. Does not respond in plain-language. Only retrieves raw excerpts(small experiment) | Strongest in terms of plain language response over static collection. Uses an LLM to help generate a response in plain language(judgement/documentation) |  routes queries across specialized agents, and knowledge broker summarizes in plain language for user(documentation and judgement) |
+| F3 | Must be hardcoded. If keywords reach a score below threshold of 0.5, hardcode application to return a message "not found in collection"(judgement) | Uses a retrieval score cutoff(Threshold would be about 0.4) to reject out-of-scope queries before calling the LLM. Instead of returning the typical augmented prompt for the LLM, application responds with a fixed message about collection limitation, doesn't invent data, and suggests alternative sources(judgement/documentation) |  specialized domain agents consult the federated data layer, if no applicable source for the query, relies this to knowledge broker and knowledge broker states limitations, doesnt invent data, and suggests alternative sources(documentation and judgement) |
+| C1 | Strongest out of three and most direct. Returns exact verbatim passages directly paired with stored metadata (title, URL, collection date etc.) | Retriever retrieves the passages, which already has metadata attached, application code augments the prompt with this info for the LLM. LLM generates a response using the passage and their source provenance | Specialized agents attach source metadata from the federated data layer and the Knowledge Broker synthesizes cited answers. At risks of broken links due to complex coordination.(documentation and judgement) |
+| Q1 | 1. | 2 | 3 |
+[^5]: {
+        "text": (
+            "To qualify for Housing Assistance, FEMA must confirm the applicant lived "
+            "at the disaster-damaged home as their primary residence. Rental Assistance "
+            "may be used to rent a house, apartment, manufactured home, recreational "
+            "vehicle or other readily fabricated dwelling."
+        ),
+        "title": "Individuals and Households Program Fact Sheet - FEMA",
+        "url": "https://www.fema.gov/sites/default/files/documents/fema_ia_individuals-households-program-fact-sheet_112024.pdf",
+        "collection_date": "2026-11-19",
+    },
+**KeywordSearch existing methods**: 
+* rank-bm25. Works by giving passages as list of words, and it scores it against a query. Scores based on rarity and term frequency. The highest scores will be the passage retrieved and cited based on what the query asked Alternative is SQLite FTS5:
+
+**Semantic retrivial existing methods**: 
+* Query becomes vector, system measures how close that vector is to each passage vector 
+
+
+|  |Keyword Search (Simple baseline) | Semantic Retrieval using RAG system and vector database | Four tier agentic architecture | 
+|---|---|---|---|
+| Strengths | Zero chance for halluncinations | Prevents halluncionations and package response in plain language  | Prevents hallucinations and is useful for coordination. Can handle large scale archives and very scalable |
+|Weakness | Returns raw excerpts user must read and interpret | Static database | Difficult implementation |
+
+
+
+
+| Approach and source | Useful behavior | Limitation | Evidence or assumption |
+|---|---|---|---|
+| Simple baseline | Replace | Replace | Replace |
+| Candidate alternative | Replace | Replace | Replace |
+
+**Choice and reason:** Connect your choice to requirements and constraints.
+**Picked**: RAG system
+
+**Reasoning**: 
+* Prevents hallucinations and provides source provenance which is a requirement of the project
+* Works sufficiently well with time constraints. Four Tier Agentic architecture may take a considerable amount of time to implement
+* Works well with a static database, no need for API calls
+
+
+
+### Decision test
+Architecture design 
+**Context and requirement:** The prototype must take in user plain-language queries about flood related disasters (Such as hurricane IDA) and answer questions using public sources(New York Emergency Management, FEMA, nyc.gov) attached with source provenance(F1, C1). The system should respond using plain language as well (F2), and refuse to make any unverifiable claims 10 document corpus isn't able to answer/support(F3) to prevent hallucinations and wrong information being given out. 
+**Options:**
+
+* Keyword + metadata (serves as baseline)
+* Semantic RAG (single pipeline)
+* Four tier agentic architecture
+* 
+**Decision and reason:** Out of the 3 options, I selected the RAG system. It's good at preventing hallucinations and provides source provenance. Works sufficiently well with semester time constraint in comparison to Four tier architecture. Works well with static database, no need for API calls. 
+**Consequences:**  *Benefits*: (1) Doesn't rely on public API's that are subject to change. This way it's easier to test, verify and less likely to break the established pipeline. (2) Gives plain language answers traceable citations/sources. **Costs**: Low latency cost with retrieval being one step, however slower than keyword search. Does an extra step for each question (embed, search, call the LLM) with LLM causing most time. It can retrieve loosely related passages which affects C1 and Q2. Adds depencies compared to keyword search such as LLM, and an embedding model. 
+**Status and revisit condition:** Proposed. Feedback on this decsion or personal experiments may change the outcome.
+
+
+### Decision test 2
+Flood related disasters - Narrowed data scope
+**Context and requirement:** The prototype must focus on disaster related information. There is a vast array of natural disasters that affect the general public, 
+
+* Heatwaves
+* Flood related events
+**Decision and reason:** Flood related events. The reason being flood related events causes more conercerns and damage in terms of displacements, infrastructure damage, and may require extensive knowledge on recovery programs. There are more people who are able to avoid heeatwaves than flood related events as well. 
+**Consequences:** *Benefits*: It helps and reaches a wider range of people compared to just heatwaves. *Cost/Limitation*: Easier to manage compared to working with more than 1 natural disaster, but misses out on reaching people who are more vulnerable to heatwaves. 
+**Status and revisit condition:** Accepted. May change based on feedback
+
+
+### Context view:
+
+*System boundary*: Flood related events Q&A prototype
+
+*Actors*:
+* General public
+* New York resident
+
+*External Systems*: 
+
+* Public documentation/sources. FEMA, New York Emergency Management, and Ny.gov.
+* External model: any LLM. Together.ai possible canidate.
+
+
+### Running view (High level)
+1. **Query intake**: User submits a question
+2. **Retriever**: Retriever searches the static corpus (10 documents exist minimum), returns top candidate chunks with their attached metadata
+3. **Application safeguard**: If top canidate is below score threshold, return fixed limitation message. Otherwise augment the prompt with the labeled chunks with IDs and sends to LLM
+4. **LLM synthesized response**: LLM returns a generated response in plain language
+
+## Component responsibility table
+| Component | Responsibility | Information it needs | Result it produces |
+|---|---|---|---|
+| Query handler | Receive an incoming user query | User query string | Replace |
+| Retriever | Search the static 10-document collection, compute relevance scores, and check the cutoff threshold before LLM synthesis | Normalized query text, score threshold (0.4) | Ranked |
+| Application safe guard | Prevents LLM from generating a response, returns fixed message | Relevance scores from retriver | Either passes augmented prompt to LLM or returns fixed message |
+| LLM synthesized response | Synthesized a response for the user | Relevant sources that were retrieved | Synthesized a response that includes a plain language summary that answers the users query with relevant source provenance  |
+### Decision 1
+Architecture design 
+**Context and requirement:** Why is a choice needed?  
+**Options:** Plausible alternatives.  
+**Decision and reason:** What you selected and why.  
+**Consequences:** Benefits, costs, and limitations.  
+**Status and revisit condition:** Proposed or accepted; what might change it?
+
+
+### Decision 2
+
+**Context and requirement:** Replace.  
+**Options:** Replace.  
+**Decision and reason:** Replace.  
+**Consequences:** Replace.  
+**Status and revisit condition:** Replace.
 ## 4 Architectural design
 
 
